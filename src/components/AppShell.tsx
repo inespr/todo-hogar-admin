@@ -6,7 +6,6 @@ import { useAuth } from "./AuthProvider";
 import { Button } from "@chakra-ui/react";
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
   const { signOutUser } = useAuth();
 
   return (

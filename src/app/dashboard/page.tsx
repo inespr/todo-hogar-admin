@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { getDocs, collection, query, deleteDoc, doc, Timestamp } from 'firebase/firestore';
 import { getFirestoreDb } from '@/lib/firebase';
 import { useRouter } from 'next/navigation';
-import { DragHandleIcon, HamburgerIcon, ViewIcon } from '@chakra-ui/icons';
+import { DragHandleIcon, HamburgerIcon } from '@chakra-ui/icons';
 
 import {
   Badge,

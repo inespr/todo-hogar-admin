@@ -20,14 +20,6 @@ import {
   Text,
 } from "@chakra-ui/react";
 
-type Electrodomestico = {
-  name: string;
-  price: number;
-  medidas?: string;
-  observaciones?: string;
-  fotos: string[];
-};
-
 export default function NewProductPage() {
   return (
     <RequireAuth>
@@ -78,10 +70,12 @@ function FormProducto() {
       await addDoc(collection(db, 'electrodomesticos'), base);
 
       router.replace('/dashboard');
-    } catch (err: any) {
-      setError(err?.message ?? 'Error al crear el producto');
-    } finally {
-      setSubmitting(false);
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Error al crear el producto');
+      }
     }
   };
 
