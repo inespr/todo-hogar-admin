@@ -34,3 +34,18 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Variables de entorno (Firebase)
+
+Crea un archivo `.env.local` en la raíz con tus credenciales de Firebase (todas son públicas del lado cliente):
+
+```
+NEXT_PUBLIC_FIREBASE_API_KEY=TU_API_KEY
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=tu-proyecto.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=tu-proyecto
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=tu-proyecto.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=1234567890
+NEXT_PUBLIC_FIREBASE_APP_ID=1:1234567890:web:abc123
+```
+
+Si no tienes un proyecto, crea uno en la consola de Firebase y habilita Authentication (Email/Password y Google), Firestore (modo producción) y Storage.
