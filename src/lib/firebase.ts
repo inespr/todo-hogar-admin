@@ -1,5 +1,3 @@
-'use client';
-
 import { initializeApp, getApps, FirebaseApp, getApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider, type Auth } from 'firebase/auth';
 import { getFirestore, initializeFirestore, type Firestore } from 'firebase/firestore';
