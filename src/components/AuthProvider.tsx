@@ -1,8 +1,14 @@
-"use client";
+'use client';
 
-import { onAuthStateChanged, signOut, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, User } from "firebase/auth";
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { getFirebaseAuth, googleProvider } from "../lib/firebase";
+import {
+  onAuthStateChanged,
+  signOut,
+  signInWithPopup,
+  signInWithEmailAndPassword,
+  User,
+} from 'firebase/auth';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { getFirebaseAuth, googleProvider } from '../lib/firebase';
 
 type AuthContextType = {
   user: User | null;
@@ -10,7 +16,6 @@ type AuthContextType = {
   signOutUser: () => Promise<void>;
   signInWithGoogle: () => Promise<void>;
   signInWithEmail: (email: string, password: string) => Promise<void>;
-  signUpWithEmail: (email: string, password: string) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -20,42 +25,49 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const auth = getFirebaseAuth();
-    const unsub = onAuthStateChanged(auth, (fbUser) => {
-      setUser(fbUser);
+    let unsub: (() => void) | undefined;
+    try {
+      const auth = getFirebaseAuth();
+      unsub = onAuthStateChanged(auth, (fbUser) => {
+        setUser(fbUser);
+        setLoading(false);
+      });
+    } catch (error) {
+      console.error('Firebase Auth no pudo inicializarse:', error);
       setLoading(false);
-    });
-    return () => unsub();
+    }
+    return () => unsub?.();
   }, []);
 
-  const value = useMemo<AuthContextType>(() => ({
+  const signOutUser = async () => {
+    const auth = getFirebaseAuth();
+    await signOut(auth);
+    setUser(null);
+  };
+
+  const signInWithGoogle = async () => {
+    const auth = getFirebaseAuth();
+    await signInWithPopup(auth, googleProvider);
+  };
+
+  const signInWithEmail = async (email: string, password: string) => {
+    const auth = getFirebaseAuth();
+    await signInWithEmailAndPassword(auth, email, password);
+  };
+
+  const value: AuthContextType = {
     user,
     loading,
-    signOutUser: async () => {
-      const auth = getFirebaseAuth();
-      await signOut(auth);
-    },
-    signInWithGoogle: async () => {
-      const auth = getFirebaseAuth();
-      await signInWithPopup(auth, googleProvider);
-    },
-    signInWithEmail: async (email: string, password: string) => {
-      const auth = getFirebaseAuth();
-      await signInWithEmailAndPassword(auth, email, password);
-    },
-    signUpWithEmail: async (email: string, password: string) => {
-      const auth = getFirebaseAuth();
-      await createUserWithEmailAndPassword(auth, email, password);
-    },
-  }), [user, loading]);
+    signOutUser,
+    signInWithGoogle,
+    signInWithEmail,
+  };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
   const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth debe usarse dentro de AuthProvider");
+  if (!ctx) throw new Error('useAuth debe usarse dentro de AuthProvider');
   return ctx;
 }
-
-

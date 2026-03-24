@@ -6,15 +6,13 @@ import { useRouter } from 'next/navigation';
 import {
   Box,
   Button,
+  Divider,
   FormControl,
   FormLabel,
   Input,
   Stack,
   Text,
-  Image as ChakraImage,
-  Card,
-  CardHeader,
-  CardBody,
+  Image,
 } from '@chakra-ui/react';
 
 export default function LoginPage() {
@@ -23,6 +21,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [signingIn, setSigningIn] = useState(false);
 
   useEffect(() => {
     if (!loading && user) {
@@ -33,11 +32,14 @@ export default function LoginPage() {
   const handleEmailLogin = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
+    setSigningIn(true);
     try {
       await signInWithEmail(email, password);
       router.replace('/dashboard');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al iniciar sesión');
+    } finally {
+      setSigningIn(false);
     }
   };
 
@@ -53,71 +55,97 @@ export default function LoginPage() {
 
   return (
     <Box
-      minH="90vh"
-      bg="orange.600"
-      p={4}
+      minH="100vh"
+      bg="gray.50"
       display="flex"
-      flexDirection="column"
+      flexDir="column"
       alignItems="center"
       justifyContent="center"
+      px={4}
     >
-      {/* Header con logo */}
-      <Box mb={6} textAlign="center">
-        <ChakraImage
-          src="/logo-rectangulo.svg"
-          alt="Todo Hogar Factory"
-          width={220}
-          height={32}
-          mx="auto"
-        />
+      <Box mb={8} textAlign="center">
+        <Image src="/todo_hogar_color.svg" alt="Todo Hogar Factory" h={10} mx="auto" mb={3} />
+        <Text color="gray.400" fontSize="sm">Panel de administración</Text>
       </Box>
 
-      <Card className="max-w-sm w-full border border-gray-200 shadow-lg">
-        <CardHeader title="Inicia sesión" />
-        <CardBody>
-          <form onSubmit={handleEmailLogin}>
-            <Stack spacing={3}>
-              <FormControl>
-                <FormLabel>Correo</FormLabel>
-                <Input
-                  type="email"
-                  placeholder="tu@correo.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </FormControl>
+      <Box
+        w="full"
+        maxW="sm"
+        bg="white"
+        borderRadius="2xl"
+        border="1px solid"
+        borderColor="gray.100"
+        shadow="md"
+        p={8}
+      >
+        <Text fontSize="xl" fontWeight="bold" mb={1} color="gray.800">Bienvenida</Text>
+        <Text fontSize="sm" color="gray.400" mb={6}>Inicia sesión para continuar</Text>
 
-              <FormControl>
-                <FormLabel>Contraseña</FormLabel>
-                <Input
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-              </FormControl>
+        <form onSubmit={handleEmailLogin}>
+          <Stack spacing={4}>
+            <FormControl>
+              <FormLabel fontSize="sm" color="gray.600">Correo electrónico</FormLabel>
+              <Input
+                type="email"
+                placeholder="tu@correo.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                bg="gray.50"
+              />
+            </FormControl>
 
-              <Button type="submit" colorScheme="orange" w="full">
-                Entrar
-              </Button>
-            </Stack>
-          </form>
+            <FormControl>
+              <FormLabel fontSize="sm" color="gray.600">Contraseña</FormLabel>
+              <Input
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                bg="gray.50"
+              />
+            </FormControl>
 
-          <Stack spacing={2} mt={4}>
-            <Button variant="outline" w="full" onClick={handleGoogle}>
-              Continuar con Google
+            <Button
+              type="submit"
+              colorScheme="orange"
+              size="lg"
+              w="full"
+              isLoading={signingIn}
+              loadingText="Entrando..."
+            >
+              Iniciar sesión
             </Button>
           </Stack>
+        </form>
 
-          {error && (
-            <Text color="red.500" fontSize="sm" mt={3} textAlign="center">
-              {error}
-            </Text>
-          )}
-        </CardBody>
-      </Card>
+        <Box position="relative" my={5}>
+          <Divider />
+          <Text
+            position="absolute"
+            top="50%"
+            left="50%"
+            transform="translate(-50%, -50%)"
+            bg="white"
+            px={3}
+            fontSize="xs"
+            color="gray.400"
+          >
+            o continúa con
+          </Text>
+        </Box>
+
+        <Button variant="outline" size="lg" w="full" onClick={handleGoogle} colorScheme="gray">
+          Continuar con Google
+        </Button>
+
+        {error && (
+          <Text color="red.500" fontSize="sm" mt={4} textAlign="center">
+            {error}
+          </Text>
+        )}
+      </Box>
     </Box>
   );
 }

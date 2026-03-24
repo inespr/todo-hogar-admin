@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "todo-hogar-factory.firebasestorage.app" },
       { protocol: "https", hostname: "via.placeholder.com" },
       { protocol: "https", hostname: "picsum.photos" },
-      
+      { protocol: "https", hostname: "res.cloudinary.com" },
     ],
   },
 };

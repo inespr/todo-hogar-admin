@@ -33,19 +33,7 @@
   --radius-lg: var(--radius);
 }
 
-/* 🌙 Dark mode */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #f3f4f6;
-    --muted: #171717;
-    --muted-foreground: #9ca3af;
-    --border: #262626;
-
-    --brand: #fb923c; /* un naranja un poco más claro para destacar en dark */
-    --brand-hover: #f97316;
-  }
-}
+/* Dark mode desactivado — panel de administración siempre en claro */
 
 /* Estilos base */
 body {
@@ -89,9 +77,9 @@ body {
   @apply bg-gray-100 text-gray-900 hover:bg-gray-200 focus:ring-gray-300;
 }
 
-/* Inputs */
+/* Inputs — color forzado para evitar herencia del modo oscuro del sistema */
 input, textarea, select {
-  @apply w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm shadow-sm placeholder-gray-400 focus:border-[var(--brand)] focus:ring-1 focus:ring-[var(--brand)];
+  color: #171717 !important;
 }
 
 /* Labels */

@@ -1,0 +1,26 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Reglas para la carpeta de electrodomésticos
+    match /electrodomesticos/{allPaths=**} {
+      // Permitir lectura a usuarios autenticados
+      allow read: if request.auth != null;
+      
+      // Permitir escritura solo a usuarios autenticados
+      // Limitar tamaño de archivo a 10MB
+      allow write: if request.auth != null
+                   && request.resource.size < 10 * 1024 * 1024
+                   && request.resource.contentType.matches('image/.*');
+      
+      // Permitir eliminación solo a usuarios autenticados
+      allow delete: if request.auth != null;
+    }
+    
+    // Denegar acceso a todo lo demás
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
+
