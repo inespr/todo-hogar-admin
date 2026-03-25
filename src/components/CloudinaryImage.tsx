@@ -4,7 +4,7 @@ import { Cloudinary } from '@cloudinary/url-gen';
 import { auto } from '@cloudinary/url-gen/actions/resize';
 import { autoGravity } from '@cloudinary/url-gen/qualifiers/gravity';
 import { AdvancedImage } from '@cloudinary/react';
-import { ImageProps } from '@cloudinary/react';
+import { Img } from '@chakra-ui/react';
 
 interface CloudinaryImageProps {
   src: string;
@@ -28,11 +28,11 @@ export default function CloudinaryImage({
   format = 'auto',
 }: CloudinaryImageProps) {
   const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'dt3o9afla';
-  
+
   // Si no hay cloudName configurado o la imagen no es de Cloudinary, usar imagen normal
   if (!cloudName || !src.includes('cloudinary.com') || !src.includes('res.cloudinary.com')) {
     return (
-      <img
+      <Img
         src={src}
         alt={alt}
         width={width}
